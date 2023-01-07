@@ -13,19 +13,19 @@ class Tree
     public Node Root => _root;
 
     // Добавление нового узла в дерево.
-    public void Add(int newValue)
+    public void Add(Node newNode)
     {
         // Проверка на существование вносимого элемента в дереве.
         // Если элемент с подобным значением существует, то новый узел не создается.
         for (int i = 0; i < _brotherList.Count; i++)
         {
-            if (_brotherList[i][0].Value == newValue) return;
+            if (_brotherList[i][0].Value == newNode.Value) return;
         }
         
         // Создается новый узел.
-        Node node = new Node(index, newValue);
+        //Node node = new Node(index, newValue);
         Node[] nodes = new Node[3];
-        nodes[0] = node;
+        nodes[0] = newNode;
         nodes[1] = Lyambda;
         nodes[2] = Lyambda;
         index++;
@@ -34,7 +34,7 @@ class Tree
         // В случае, если список пуст, вводимый элемент становится корнем дерева.
         if (_brotherList.Count == 1)
         {
-            _root = node;
+            _root = newNode;
             return;
         }
 
@@ -44,18 +44,24 @@ class Tree
         {
             if (currentNode.Value == _brotherList[i][0].Value)
             {
-                if (_brotherList[i][0].Value > node.Value)
+                if (_brotherList[i][0].Value > newNode.Value)
                 {
-                    if (_brotherList[i][1] == Lyambda) _brotherList[i][1] = node;
+                    if (_brotherList[i][1] == Lyambda) _brotherList[i][1] = newNode;
                     else currentNode = _brotherList[i][1];
                 }
                 else
                 {
-                    if (_brotherList[i][2] == Lyambda) _brotherList[i][2] = node;
+                    if (_brotherList[i][2] == Lyambda) _brotherList[i][2] = newNode;
                     else currentNode = _brotherList[i][2];
                 }
             }
         }
+    }
+
+    public void Add(int newValue)
+    {
+        Node node = new Node(index, newValue);
+        Add(node);
     }
 
     // Функция возвращает родителя узла со значение n. 
@@ -120,7 +126,8 @@ class Tree
     }
 
     // Вывод списка сыновей.
-    public void PrintTree()
+    // Если параметр label равен true, то выводятся также метки узлов.
+    public void PrintTree(bool label = false)
     {
         string temp;
         for (int i = 0; i < _brotherList.Count; i++)
@@ -130,7 +137,11 @@ class Tree
             {
 
                 if (_brotherList[i][j] == Lyambda) temp = "NULL";
-                else temp = _brotherList[i][j].Value.ToString();
+                else
+                {
+                    temp = _brotherList[i][j].Value.ToString();
+                    if (label) temp += " Label: " + _brotherList[i][j].label.ToString();
+                }
                 
                 switch (j)
                 {
@@ -158,6 +169,18 @@ class Tree
                 return _brotherList[i][0];
 
         return Lyambda;
+    }
+    
+    
+    // Удаляет узел со значением n.
+    // При удалении происходит прямой обход поддерева узла со значением n.
+    public void DeleteNode(int? n)
+    {
+        // Сюда заносятся
+        Queue<Node> nodeQueue = new Queue<Node>();
+        Stack<Node> nodeStack = new Stack<Node>();
+        
+        
     }
 
     public Tree()
@@ -217,9 +240,9 @@ class Trees
     }
     
     // Печатает список сыновей конкретного дерева.
-    public void PrintTree(string treeName)
+    public void PrintTree(string treeName, bool label = false)
     {
-        _trees[treeName].PrintTree();
+        _trees[treeName].PrintTree(label);
     }
     
     
@@ -307,16 +330,7 @@ class Program
         trees.AddNode(7, "T1");
         
         
-        trees.PrintTree("T1");
-        Console.WriteLine();
-        Node.Print(trees.Parent(8, "T1"));
-        Node.Print(trees.Parent(10, "T1"));
-        Node.Print(trees.LeftChild(8, "T1"));
-        Node.Print(trees.RightSibling(3, "T1"));
-        Console.WriteLine(trees.Label(8, "T1"));
-        Console.WriteLine(trees.Label(666, "T1"));
-        Node.Print(trees.Root("T1"));
-        trees.MakeNull("T1");
-        trees.PrintTree("T1");
+        trees.PrintTree("T1", true);
+        
     }
 }
