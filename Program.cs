@@ -479,42 +479,14 @@ class Program
         trees.AddNode(4, "T2");
         trees.AddNode(7, "T2");
         
+        Console.WriteLine("Tree T1:\n");
+        trees.PrintTree("T1");
+        Console.WriteLine();
+        Console.WriteLine("Tree T2:\n");
+        trees.PrintTree("T2");
+        Console.WriteLine();
         trees.DeleteFromAnotherTree("T1","T2");
-        
-        trees.PrintTree("T1", true);
-
-        // Trees treeSet = new Trees();
-        // treeSet.AddTree("T1");
-        // treeSet.AddTree("T2");
-        //
-        // treeSet.AddNode(2, "T1");
-        // treeSet.AddNode(1, "T1");
-        // treeSet.AddNode(3, "T1");
-        //
-        // treeSet.AddNode(9, "T2");
-        // treeSet.AddNode(8, "T2");
-        // treeSet.AddNode(10, "T2");
-        //
-        // Tree test = treeSet.Create(5, "T1", "T2");
-        // test.PrintTree();
-
-
-
-        // Tree tree = new Tree();
-        //
-        // tree.Add(8);
-        // tree.Add(3);
-        // tree.Add(10);
-        // tree.Add(1);
-        // tree.Add(6);
-        // tree.Add(14);
-        // tree.Add(4);
-        // tree.Add(13);
-        // tree.Add(7);
-        //
-        // tree.DeleteNode(3);
-        // tree.PrintTree(true);
-
-
+        Console.WriteLine("Tree T1 after deleteng nodes from T2:\n");
+        trees.PrintTree("T1");
     }
 }
