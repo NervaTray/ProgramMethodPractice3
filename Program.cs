@@ -207,26 +207,26 @@ class Tree
             }
             else
             {
-                
+
                 NCurrent.label = 2;
                 nodeQueue.Enqueue(nodeStack.Pop());
-                if (RightSibling(NCurrent) != Lyambda && RightSibling(NCurrent).label != 2) nodeStack.Push(RightSibling(NCurrent));
+                if (RightSibling(NCurrent) != Lyambda && RightSibling(NCurrent).label != 2 && NCurrent != nStart)
+                    nodeStack.Push(RightSibling(NCurrent));
             }
 
-            if (nStart == nodeStack.Peek()) break;
-
         }
+
 
         // Удаляет все узлы с label = 2 из списка сыновей.
         for (int i = 0; i < _brotherList.Count; i++)
         {
-            if (_brotherList[i][0].label == 2 || _brotherList[i][0].label == 1)
+            if (_brotherList[i][0].label == 2)
             {
                 _brotherList.RemoveAt(i);
                 i--;
             }
         }
-
+        
         // Убирает зависимость удаляемого узла от родителя.
         if (Parent(nStart) != Lyambda)
         {
@@ -241,7 +241,7 @@ class Tree
             }
         }
 
-        while (nodeQueue.Count > 0)
+        while (nodeQueue.Count > 1)
         {
             Add(nodeQueue.Dequeue());
         }
@@ -261,6 +261,17 @@ class Tree
         Lyambda = new Node(0, null, -1);
         _root = Lyambda;
     }
+
+
+    // Удаляет все узлы, которые нашлись в дереве B.
+    public void DeleteFromB(Tree B)
+    {
+        for (int i = 0; i < B._brotherList.Count; i++)
+        {
+            DeleteNode(B._brotherList[i][0]);
+        }
+    }
+    
 
     // Это еще что такое?
     public Tree(Node root, Tree tree1, Tree tree2)
@@ -430,12 +441,11 @@ class Trees
         _trees[T].DeleteNode(n);
     }
 
+    // Удаляет одинаковые узлы в дереве baseTree, которые нашлись в дереве treeThatWantToDeleteNodesFromBaseTreeXDDDD.
     public void DeleteFromAnotherTree(string baseTree, string treeThatWantToDeleteNodesFromBaseTreeXDDDD)
     {
-        _trees
+        _trees[baseTree].DeleteFromB(_trees[treeThatWantToDeleteNodesFromBaseTreeXDDDD]);
     }
-    
-    
 
 
     // Конструктор.
@@ -450,37 +460,43 @@ class Program
 {
     static void Main()
     {
-        // Trees trees = new Trees();
-        // trees.AddTree("T1");
-        //
-        // trees.AddNode(8, "T1");
-        // trees.AddNode(3, "T1");
-        // trees.AddNode(10, "T1");
-        // trees.AddNode(1, "T1");
-        // trees.AddNode(6, "T1");
-        // trees.AddNode(14, "T1");
-        // trees.AddNode(4, "T1");
-        // trees.AddNode(13, "T1");
-        // trees.AddNode(7, "T1");
-        //
-        // trees.DeleteNode(14, "T1");
-        // trees.PrintTree("T1", true);
-
-
-        Trees treeSet = new Trees();
-        treeSet.AddTree("T1");
-        treeSet.AddTree("T2");
+        Trees trees = new Trees();
+        trees.AddTree("T1");
         
-        treeSet.AddNode(2, "T1");
-        treeSet.AddNode(1, "T1");
-        treeSet.AddNode(3, "T1");
+        trees.AddNode(8, "T1");
+        trees.AddNode(3, "T1");
+        trees.AddNode(10, "T1");
+        trees.AddNode(1, "T1");
+        trees.AddNode(6, "T1");
+        trees.AddNode(14, "T1");
+        trees.AddNode(4, "T1");
+        trees.AddNode(13, "T1");
+        trees.AddNode(7, "T1");
         
-        treeSet.AddNode(9, "T2");
-        treeSet.AddNode(8, "T2");
-        treeSet.AddNode(10, "T2");
+        trees.AddTree("T2");
+        
+        trees.AddNode(6, "T2");
+        trees.AddNode(4, "T2");
+        trees.AddNode(7, "T2");
+        
+        trees.DeleteFromAnotherTree("T1","T2");
+        
+        trees.PrintTree("T1", true);
 
-        Tree test = treeSet.Create(5, "T1", "T2");
-        test.PrintTree();
+        // Trees treeSet = new Trees();
+        // treeSet.AddTree("T1");
+        // treeSet.AddTree("T2");
+        //
+        // treeSet.AddNode(2, "T1");
+        // treeSet.AddNode(1, "T1");
+        // treeSet.AddNode(3, "T1");
+        //
+        // treeSet.AddNode(9, "T2");
+        // treeSet.AddNode(8, "T2");
+        // treeSet.AddNode(10, "T2");
+        //
+        // Tree test = treeSet.Create(5, "T1", "T2");
+        // test.PrintTree();
 
 
 
