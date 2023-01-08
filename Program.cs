@@ -248,12 +248,58 @@ class Tree
 
     }
 
+    public void DeleteNode(Node node)
+    {
+        DeleteNode(node.Value);
+    }
+
+    // Конструктор.
     public Tree()
     {
         index = 1;
         _brotherList = new List<Node[]>();
         Lyambda = new Node(0, null, -1);
         _root = Lyambda;
+    }
+
+    // Это еще что такое?
+    public Tree(Node root, Tree tree1, Tree tree2)
+    {
+        index = 1;
+        Lyambda = new Node(0, null, -1);
+        _brotherList = new List<Node[]>();
+        _root = root;
+
+        if (tree1._brotherList.Count == 0 || tree2._brotherList.Count == 0)
+        {
+            Console.WriteLine("One of tree is empty. ERRROR.");
+            return;
+        }
+        
+        Node[] nodes = new Node[3];
+        _brotherList.Add(nodes);
+        _brotherList[0][0] = root;
+        if (tree1._root.Value > tree2._root.Value)
+        {
+            _brotherList[0][1] = tree2._root;
+            _brotherList[0][2] = tree1._root;
+        }
+        else
+        {
+            _brotherList[0][1] = tree1._root;
+            _brotherList[0][2] = tree2._root;
+        }
+
+
+        for (int i = 0; i < tree1._brotherList.Count; i++)
+        {
+            _brotherList.Add(tree1._brotherList[i]);
+        }
+
+        for (int i = 0; i < tree2._brotherList.Count; i++)
+        {
+            _brotherList.Add(tree2._brotherList[i]);
+        }
     }
 
 }
@@ -354,6 +400,17 @@ class Trees
     {
         return _trees[T].Label(node);
     }
+    
+    // Создает отношение (родительское) между узлом n и поддеревьями T1, T2.
+    public Tree Create(Node n, string T1, string T2)
+    {
+        return new Tree(n, _trees[T1], _trees[T2]);
+    }
+
+    public Tree Create(int n, string T1, string T2)
+    {
+        return new Tree(new Node(123, n, 0), _trees[T1], _trees[T2]);
+    }
 
     // Возвращает узел, являющимся корнем дерева Т.
     public Node Root(string T)
@@ -367,7 +424,19 @@ class Trees
         _trees[T] = new Tree();
     }
     
+    // Удаляет узел со значением n в дереве T.
+    public void DeleteNode(int? n, string T)
+    {
+        _trees[T].DeleteNode(n);
+    }
+
+    public void DeleteFromAnotherTree(string baseTree, string treeThatWantToDeleteNodesFromBaseTreeXDDDD)
+    {
+        _trees
+    }
     
+    
+
 
     // Конструктор.
     public Trees()
@@ -394,23 +463,42 @@ class Program
         // trees.AddNode(13, "T1");
         // trees.AddNode(7, "T1");
         //
+        // trees.DeleteNode(14, "T1");
         // trees.PrintTree("T1", true);
 
-        Tree tree = new Tree();
+
+        Trees treeSet = new Trees();
+        treeSet.AddTree("T1");
+        treeSet.AddTree("T2");
         
-        tree.Add(8);
-        tree.Add(3);
-        tree.Add(10);
-        tree.Add(1);
-        tree.Add(6);
-        tree.Add(14);
-        tree.Add(4);
-        tree.Add(13);
-        tree.Add(7);
+        treeSet.AddNode(2, "T1");
+        treeSet.AddNode(1, "T1");
+        treeSet.AddNode(3, "T1");
         
-        tree.DeleteNode(3);
-        tree.PrintTree(true);
-        
+        treeSet.AddNode(9, "T2");
+        treeSet.AddNode(8, "T2");
+        treeSet.AddNode(10, "T2");
+
+        Tree test = treeSet.Create(5, "T1", "T2");
+        test.PrintTree();
+
+
+
+        // Tree tree = new Tree();
+        //
+        // tree.Add(8);
+        // tree.Add(3);
+        // tree.Add(10);
+        // tree.Add(1);
+        // tree.Add(6);
+        // tree.Add(14);
+        // tree.Add(4);
+        // tree.Add(13);
+        // tree.Add(7);
+        //
+        // tree.DeleteNode(3);
+        // tree.PrintTree(true);
+
 
     }
 }
