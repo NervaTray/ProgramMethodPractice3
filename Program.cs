@@ -176,11 +176,76 @@ class Tree
     // При удалении происходит прямой обход поддерева узла со значением n.
     public void DeleteNode(int? n)
     {
-        // Сюда заносятся
+        // Если узла со значением n не существует, то происходит выход из метода.
+        if (FindNode(n) == Lyambda) return;
+
+        // Обнуление меток для всех узлов в дереве.
+        for (int i = 0; i < _brotherList.Count; i++)
+        {
+            _brotherList[i][0].label = 0;
+        }
+        
+        // Сюда заносятся узлы, которые будут заново внесены в дерево.
         Queue<Node> nodeQueue = new Queue<Node>();
+        // Стек для обхода дерева в глубину.
         Stack<Node> nodeStack = new Stack<Node>();
-        
-        
+
+        Node nStart = FindNode(n);
+        nodeStack.Push(nStart);
+
+        // Делает обход дерева в глубину со стартовой позицией n.
+        // Узел со значением n остается со значением label = 1.
+        // Остальные узлы, являющиеся поддеревом узла со значением n имеют label = 2.
+        while (nodeStack.Count > 0)
+        {
+            Node NCurrent = nodeStack.Peek();
+            NCurrent.label = 1;
+
+            if (LeftChild(NCurrent) != Lyambda && LeftChild(NCurrent).label != 2)
+            {
+                nodeStack.Push(LeftChild(NCurrent));
+            }
+            else
+            {
+                
+                NCurrent.label = 2;
+                nodeQueue.Enqueue(nodeStack.Pop());
+                if (RightSibling(NCurrent) != Lyambda && RightSibling(NCurrent).label != 2) nodeStack.Push(RightSibling(NCurrent));
+            }
+
+            if (nStart == nodeStack.Peek()) break;
+
+        }
+
+        // Удаляет все узлы с label = 2 из списка сыновей.
+        for (int i = 0; i < _brotherList.Count; i++)
+        {
+            if (_brotherList[i][0].label == 2 || _brotherList[i][0].label == 1)
+            {
+                _brotherList.RemoveAt(i);
+                i--;
+            }
+        }
+
+        // Убирает зависимость удаляемого узла от родителя.
+        if (Parent(nStart) != Lyambda)
+        {
+            Node temp = Parent(nStart);
+            for (int i = 0; i < _brotherList.Count; i++)
+            {
+                if (temp.Value == _brotherList[i][0].Value)
+                {
+                    if (nStart.Value == _brotherList[i][1].Value) _brotherList[i][1] = Lyambda;
+                    else _brotherList[i][2] = Lyambda;
+                }
+            }
+        }
+
+        while (nodeQueue.Count > 0)
+        {
+            Add(nodeQueue.Dequeue());
+        }
+
     }
 
     public Tree()
@@ -190,7 +255,7 @@ class Tree
         Lyambda = new Node(0, null, -1);
         _root = Lyambda;
     }
-    
+
 }
 
 // Описывает узел.
@@ -316,21 +381,36 @@ class Program
 {
     static void Main()
     {
-        Trees trees = new Trees();
-        trees.AddTree("T1");
+        // Trees trees = new Trees();
+        // trees.AddTree("T1");
+        //
+        // trees.AddNode(8, "T1");
+        // trees.AddNode(3, "T1");
+        // trees.AddNode(10, "T1");
+        // trees.AddNode(1, "T1");
+        // trees.AddNode(6, "T1");
+        // trees.AddNode(14, "T1");
+        // trees.AddNode(4, "T1");
+        // trees.AddNode(13, "T1");
+        // trees.AddNode(7, "T1");
+        //
+        // trees.PrintTree("T1", true);
+
+        Tree tree = new Tree();
         
-        trees.AddNode(8, "T1");
-        trees.AddNode(3, "T1");
-        trees.AddNode(10, "T1");
-        trees.AddNode(1, "T1");
-        trees.AddNode(6, "T1");
-        trees.AddNode(14, "T1");
-        trees.AddNode(4, "T1");
-        trees.AddNode(13, "T1");
-        trees.AddNode(7, "T1");
+        tree.Add(8);
+        tree.Add(3);
+        tree.Add(10);
+        tree.Add(1);
+        tree.Add(6);
+        tree.Add(14);
+        tree.Add(4);
+        tree.Add(13);
+        tree.Add(7);
         
+        tree.DeleteNode(3);
+        tree.PrintTree(true);
         
-        trees.PrintTree("T1", true);
-        
+
     }
 }
